@@ -1,5 +1,5 @@
 target/
-
+.DS_Store
 ### STS ###
 .apt_generated
 .classpath
