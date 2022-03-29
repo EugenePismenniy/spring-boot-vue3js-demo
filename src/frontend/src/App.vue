@@ -9,6 +9,8 @@
 
 import DataList from "@/components/DataList";
 
+import axios from 'axios'
+
 export default {
   name: 'App',
   components: {
@@ -16,12 +18,15 @@ export default {
   },
   data() {
     return {
-      dataList: [
-        {id: 1, name: 'Some name', value: 1234},
-        {id: 2, name: 'Some name 2', value: 2234},
-        {id: 3, name: 'Some name 3', value: 3234},
-      ]
+      dataList: []
     }
+  },
+  mounted() {
+
+    axios.get('/api/v1/data-list').then((resp) => {
+      this.dataList = resp.data;
+    })
+
   }
 }
 </script>
