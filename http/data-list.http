@@ -2,3 +2,10 @@
 
 ###
 GET http://localhost:8080/api/v1/data-list
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyMSIsInJvbGVzIjpbIlJPTEVfQURNSU4iLCJST0xFX1VTRVIiXSwiZXhwIjoxNjUwNDM0MDY4fQ.gJvaZ1SIDcCB8KRpqQ_43epCQT2MmmAb3-h6VwvzmAI
+
+### get JWT
+POST http://localhost:8080/api/v1/login
+Content-Type: application/x-www-form-urlencoded
+
+username=user1&password=123

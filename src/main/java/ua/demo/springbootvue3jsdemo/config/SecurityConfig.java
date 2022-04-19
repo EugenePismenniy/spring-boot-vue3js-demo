@@ -9,8 +9,9 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import ua.demo.springbootvue3jsdemo.security.filters.JwtHmac256Helper;
-import ua.demo.springbootvue3jsdemo.security.filters.JwtUsernamePasswordAuthenticationFilter;
+import ua.demo.springbootvue3jsdemo.security.jwt.JwtAuthorizationFilter;
+import ua.demo.springbootvue3jsdemo.security.jwt.JwtHmac256Helper;
+import ua.demo.springbootvue3jsdemo.security.jwt.JwtUsernamePasswordAuthenticationFilter;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
@@ -20,7 +21,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    static final String LOGIN_URL = "/api/v1/login";
+    private static final String LOGIN_URL = "/api/v1/login";
 
 
     private final JwtHmac256Helper jwtHmac256Helper;
@@ -47,6 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers(LOGIN_URL).permitAll();
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(jwtUsernamePasswordAuthenticationFilter());
+        http.addFilterBefore(jwtAuthorizationFilter(), JwtUsernamePasswordAuthenticationFilter.class);
 
     }
 
@@ -55,6 +57,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public JwtUsernamePasswordAuthenticationFilter jwtUsernamePasswordAuthenticationFilter() throws Exception {
         JwtUsernamePasswordAuthenticationFilter filter = new JwtUsernamePasswordAuthenticationFilter(authenticationManagerBean(), jwtHmac256Helper, objectMapper);
         filter.setFilterProcessesUrl(LOGIN_URL);
+        return filter;
+    }
+
+    @Bean
+    public JwtAuthorizationFilter jwtAuthorizationFilter() {
+        JwtAuthorizationFilter filter = new JwtAuthorizationFilter(jwtHmac256Helper);
+        filter.setLoginUrl(LOGIN_URL);
         return filter;
     }
 
